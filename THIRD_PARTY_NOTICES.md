@@ -1,0 +1,37 @@
+# Third-party notices
+
+Observatory is MIT licensed. Dependencies keep their own licenses and notices.
+
+- go/github.com/Microsoft/go-winio v0.6.2: [go_github.com_Microsoft_go-winio@v0.6.2_LICENSE.txt](LICENSES/go_github.com_Microsoft_go-winio@v0.6.2_LICENSE.txt)
+- go/github.com/containerd/errdefs v1.0.0: [go_github.com_containerd_errdefs@v1.0.0_LICENSE.txt](LICENSES/go_github.com_containerd_errdefs@v1.0.0_LICENSE.txt)
+- go/github.com/containerd/errdefs/pkg v0.3.0: [go_github.com_containerd_errdefs_pkg@v0.3.0_LICENSE.txt](LICENSES/go_github.com_containerd_errdefs_pkg@v0.3.0_LICENSE.txt)
+- go/github.com/distribution/reference v0.6.0: [go_github.com_distribution_reference@v0.6.0_LICENSE.txt](LICENSES/go_github.com_distribution_reference@v0.6.0_LICENSE.txt)
+- go/github.com/docker/go-connections v0.8.2: [go_github.com_docker_go-connections@v0.8.2_LICENSE.txt](LICENSES/go_github.com_docker_go-connections@v0.8.2_LICENSE.txt)
+- go/github.com/docker/go-units v0.5.0: [go_github.com_docker_go-units@v0.5.0_LICENSE.txt](LICENSES/go_github.com_docker_go-units@v0.5.0_LICENSE.txt)
+- go/github.com/felixge/httpsnoop v1.0.4: [go_github.com_felixge_httpsnoop@v1.0.4_LICENSE.txt.txt](LICENSES/go_github.com_felixge_httpsnoop@v1.0.4_LICENSE.txt.txt)
+- go/github.com/go-logr/logr v1.4.2: [go_github.com_go-logr_logr@v1.4.2_LICENSE.txt](LICENSES/go_github.com_go-logr_logr@v1.4.2_LICENSE.txt)
+- go/github.com/go-logr/stdr v1.2.2: [go_github.com_go-logr_stdr@v1.2.2_LICENSE.txt](LICENSES/go_github.com_go-logr_stdr@v1.2.2_LICENSE.txt)
+- go/github.com/jackc/pgpassfile v1.0.0: [go_github.com_jackc_pgpassfile@v1.0.0_LICENSE.txt](LICENSES/go_github.com_jackc_pgpassfile@v1.0.0_LICENSE.txt)
+- go/github.com/jackc/pgservicefile v0.0.0-20240606120523-5a60cdf6a761: [go_github.com_jackc_pgservicefile@v0.0.0-20240606120523-5a60cdf6a761_LICENSE.txt](LICENSES/go_github.com_jackc_pgservicefile@v0.0.0-20240606120523-5a60cdf6a761_LICENSE.txt)
+- go/github.com/jackc/pgx/v5 v5.11.0: [go_github.com_jackc_pgx_v5@v5.11.0_LICENSE.txt](LICENSES/go_github.com_jackc_pgx_v5@v5.11.0_LICENSE.txt)
+- go/github.com/jackc/puddle/v2 v2.2.2: [go_github.com_jackc_puddle_v2@v2.2.2_LICENSE.txt](LICENSES/go_github.com_jackc_puddle_v2@v2.2.2_LICENSE.txt)
+- go/github.com/moby/docker-image-spec v1.3.1: [go_github.com_moby_docker-image-spec@v1.3.1_LICENSE.txt](LICENSES/go_github.com_moby_docker-image-spec@v1.3.1_LICENSE.txt)
+- go/github.com/moby/moby/api v1.56.1: [go_github.com_moby_moby_api@v1.56.1_LICENSE.txt](LICENSES/go_github.com_moby_moby_api@v1.56.1_LICENSE.txt)
+- go/github.com/moby/moby/client v0.6.2: [go_github.com_moby_moby_client@v0.6.2_LICENSE.txt](LICENSES/go_github.com_moby_moby_client@v0.6.2_LICENSE.txt)
+- go/github.com/opencontainers/go-digest v1.0.0: [go_github.com_opencontainers_go-digest@v1.0.0_LICENSE.txt](LICENSES/go_github.com_opencontainers_go-digest@v1.0.0_LICENSE.txt), [go_github.com_opencontainers_go-digest@v1.0.0_LICENSE.docs.txt](LICENSES/go_github.com_opencontainers_go-digest@v1.0.0_LICENSE.docs.txt)
+- go/github.com/opencontainers/image-spec v1.1.1: [go_github.com_opencontainers_image-spec@v1.1.1_LICENSE.txt](LICENSES/go_github.com_opencontainers_image-spec@v1.1.1_LICENSE.txt)
+- go/go.opentelemetry.io/auto/sdk v1.1.0: [go_go.opentelemetry.io_auto_sdk@v1.1.0_LICENSE.txt](LICENSES/go_go.opentelemetry.io_auto_sdk@v1.1.0_LICENSE.txt)
+- go/go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.60.0: [go_go.opentelemetry.io_contrib_instrumentation_net_http_otelhttp@v0.60.0_LICENSE.txt](LICENSES/go_go.opentelemetry.io_contrib_instrumentation_net_http_otelhttp@v0.60.0_LICENSE.txt)
+- go/go.opentelemetry.io/otel v1.35.0: [go_go.opentelemetry.io_otel@v1.35.0_LICENSE.txt](LICENSES/go_go.opentelemetry.io_otel@v1.35.0_LICENSE.txt)
+- go/go.opentelemetry.io/otel/metric v1.35.0: [go_go.opentelemetry.io_otel_metric@v1.35.0_LICENSE.txt](LICENSES/go_go.opentelemetry.io_otel_metric@v1.35.0_LICENSE.txt)
+- go/go.opentelemetry.io/otel/trace v1.35.0: [go_go.opentelemetry.io_otel_trace@v1.35.0_LICENSE.txt](LICENSES/go_go.opentelemetry.io_otel_trace@v1.35.0_LICENSE.txt)
+- go/golang.org/x/sync v0.17.0: [go_golang.org_x_sync@v0.17.0_LICENSE.txt](LICENSES/go_golang.org_x_sync@v0.17.0_LICENSE.txt)
+- go/golang.org/x/sys v0.33.0: [go_golang.org_x_sys@v0.33.0_LICENSE.txt](LICENSES/go_golang.org_x_sys@v0.33.0_LICENSE.txt)
+- go/golang.org/x/text v0.29.0: [go_golang.org_x_text@v0.29.0_LICENSE.txt](LICENSES/go_golang.org_x_text@v0.29.0_LICENSE.txt)
+- Go standard library go1.25.6: [Go_standard_library@go1.25.6_LICENSE.txt](LICENSES/Go_standard_library@go1.25.6_LICENSE.txt)
+- npm/lucide-react 0.468.0: [npm_lucide-react@0.468.0_LICENSE.txt](LICENSES/npm_lucide-react@0.468.0_LICENSE.txt)
+- npm/react 19.3.1: [npm_react@19.3.1_LICENSE.txt](LICENSES/npm_react@19.3.1_LICENSE.txt)
+- npm/react-dom 19.3.1: [npm_react-dom@19.3.1_LICENSE.txt](LICENSES/npm_react-dom@19.3.1_LICENSE.txt)
+- npm/scheduler 0.28.0: [npm_scheduler@0.28.0_LICENSE.txt](LICENSES/npm_scheduler@0.28.0_LICENSE.txt)
+
+This inventory covers Go modules used by the application, the Go standard library used for this build, and non-optional frontend runtime packages from the lockfile. Regenerate after dependency/toolchain changes. Build tools and separately downloaded PostgreSQL/base images have their own licenses and notices; consult those upstream distributions. This inventory is not a claim that all dependency terms are MIT.

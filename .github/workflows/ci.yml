@@ -1,0 +1,57 @@
+name: Checks
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_call:
+    inputs:
+      ref:
+        type: string
+        default: ""
+permissions:
+  contents: read
+jobs:
+  check:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-24.04
+            platform: linux/amd64
+          - runner: ubuntu-24.04-arm
+            platform: linux/arm64
+    runs-on: ${{ matrix.runner }}
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_DB: observatory_test
+          POSTGRES_USER: observatory
+          POSTGRES_PASSWORD: integration-only
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U observatory -d observatory_test"
+          --health-interval 5s --health-timeout 3s --health-retries 12
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.ref || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          package-manager-cache: false
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: go.mod
+      - run: npm ci --no-fund --no-audit
+        working-directory: frontend
+      - run: npm test && npm run build
+        working-directory: frontend
+      - run: go test ./... && go vet ./...
+        env:
+          TEST_DATABASE_URL: postgres://observatory:integration-only@localhost:5432/observatory_test?sslmode=disable
+      - run: python3 scripts/collect_licenses.py
+      - run: python3 -m unittest discover -s scripts -p 'test_*.py'
+      - run: docker build --build-arg VERSION=0.0.0 -t observatory-check:0.0.0 .
+      - run: python3 scripts/smoke_release.py --image observatory-check:0.0.0 --platform '${{ matrix.platform }}'

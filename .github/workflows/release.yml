@@ -1,0 +1,86 @@
+name: Prepare numbered release
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Existing tag version without v, for example 0.1.0"
+        required: true
+        type: string
+permissions:
+  contents: read
+concurrency:
+  group: release-${{ inputs.version }}
+  cancel-in-progress: false
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Validate version
+        env:
+          VERSION: ${{ inputs.version }}
+        run: '[[ "$VERSION" =~ ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]'
+  checks:
+    needs: validate
+    uses: ./.github/workflows/ci.yml
+    with:
+      ref: v${{ inputs.version }}
+  package:
+    needs: checks
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: v${{ inputs.version }}
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          package-manager-cache: false
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: go.mod
+      - run: npm ci --no-fund --no-audit
+        working-directory: frontend
+      - run: python3 scripts/collect_licenses.py
+      - name: Resolve identity
+        id: identity
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          echo "image=ghcr.io/${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
+          echo "revision=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+      - uses: docker/setup-buildx-action@v4
+      - uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v7
+        id: image
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.identity.outputs.image }}:${{ inputs.version }}
+          build-args: |
+            VERSION=${{ inputs.version }}
+            REVISION=${{ steps.identity.outputs.revision }}
+            SOURCE_URL=https://github.com/${{ github.repository }}
+          provenance: true
+          sbom: true
+      - name: Create digest-pinned user bundle
+        env:
+          VERSION: ${{ inputs.version }}
+          IMAGE: ${{ steps.identity.outputs.image }}@${{ steps.image.outputs.digest }}
+        run: python3 scripts/package_release.py --version "$VERSION" --image "$IMAGE"
+      - uses: actions/upload-artifact@v7
+        with:
+          name: observatory-${{ inputs.version }}
+          path: |
+            dist/observatory-${{ inputs.version }}.zip
+            dist/SHA256SUMS
+          if-no-files-found: error
+          retention-days: 14

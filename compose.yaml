@@ -1,0 +1,33 @@
+name: go-observability
+services:
+  db:
+    image: postgres:18
+    environment:
+      POSTGRES_DB: observatory
+      POSTGRES_USER: observatory
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-local-development-only}
+    ports:
+      - "127.0.0.1:55432:5432"
+    volumes:
+      - database:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U observatory -d observatory"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+  app:
+    build: .
+    environment:
+      DATABASE_URL: postgres://observatory:${POSTGRES_PASSWORD:-local-development-only}@db:5432/observatory?sslmode=disable
+      LISTEN_ADDR: :8080
+      DOCKER_HOST: unix:///var/run/docker.sock
+      SAMPLE_INTERVAL: 10s
+    ports:
+      - "127.0.0.1:8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    depends_on:
+      db:
+        condition: service_healthy
+volumes:
+  database:

@@ -1,0 +1,17 @@
+.env
+*.exe
+coverage.out
+frontend/node_modules/
+frontend/*.tsbuildinfo
+work/
+outputs/
+
+dist/
+**/.env
+*.dump
+__pycache__/
+
+.env.*
+**/.env.*
+!.env.example
+!**/.env.example

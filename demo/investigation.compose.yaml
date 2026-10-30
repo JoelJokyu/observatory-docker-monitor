@@ -1,0 +1,13 @@
+name: observatory-investigation-demo
+services:
+  api:
+    image: alpine:latest
+    command: [sh, -c, 'echo "alpha ready"; echo "beta warning" >&2; printf "alpha multiline\ncontinuation <script>plain</script>\n"; sleep 300']
+    mem_limit: 32m
+    cpus: 0.1
+  tty:
+    image: alpine:latest
+    tty: true
+    command: [sh, -c, 'echo "alpha combined"; sleep 300']
+    mem_limit: 32m
+    cpus: 0.1

@@ -1,0 +1,222 @@
+{
+  "dependencies": [
+    {
+      "name": "go/github.com/Microsoft/go-winio",
+      "version": "v0.6.2",
+      "files": [
+        "LICENSES/go_github.com_Microsoft_go-winio@v0.6.2_LICENSE.txt"
+      ]
+    },
+    {
+      "name": "go/github.com/containerd/errdefs",
+      "version": "v1.0.0",
+      "files": [
+        "LICENSES/go_github.com_containerd_errdefs@v1.0.0_LICENSE.txt"
+      ]
+    },
+    {
+      "name": "go/github.com/containerd/errdefs/pkg",
+      "version": "v0.3.0",
+      "files": [
+        "LICENSES/go_github.com_containerd_errdefs_pkg@v0.3.0_LICENSE.txt"
+      ]
+    },
+    {
+      "name": "go/github.com/distribution/reference",
+      "version": "v0.6.0",
+      "files": [
+        "LICENSES/go_github.com_distribution_reference@v0.6.0_LICENSE.txt"
+      ]
+    },
+    {
+      "name": "go/github.com/docker/go-connections",
+      "version": "v0.8.2",
+      "files": [
+        "LICENSES/go_github.com_docker_go-connections@v0.8.2_LICENSE.txt"
+      ]
+    },
+    {
+      "name": "go/github.com/docker/go-units",
+      "version": "v0.5.0",
+      "files": [
+        "LICENSES/go_github.com_docker_go-units@v0.5.0_LICENSE.txt"
+      ]
+    },
+    {
+      "name": "go/github.com/felixge/httpsnoop",
+      "version": "v1.0.4",
+      "files": [
+        "LICENSES/go_github.com_felixge_httpsnoop@v1.0.4_LICENSE.txt.txt"
+      ]
+    },
+    {
+      "name": "go/github.com/go-logr/logr",
+      "version": "v1.4.2",
+      "files": [
+        "LICENSES/go_github.com_go-logr_logr@v1.4.2_LICENSE.txt"
+      ]
+    },
+    {
+      "name": "go/github.com/go-logr/stdr",
+      "version": "v1.2.2",
+      "files": [
+        "LICENSES/go_github.com_go-logr_stdr@v1.2.2_LICENSE.txt"
+      ]
+    },
+    {
+      "name": "go/github.com/jackc/pgpassfile",
+      "version": "v1.0.0",
+      "files": [
+        "LICENSES/go_github.com_jackc_pgpassfile@v1.0.0_LICENSE.txt"
+      ]
+    },
+    {
+      "name": "go/github.com/jackc/pgservicefile",
+      "version": "v0.0.0-20240606120523-5a60cdf6a761",
+      "files": [
+        "LICENSES/go_github.com_jackc_pgservicefile@v0.0.0-20240606120523-5a60cdf6a761_LICENSE.txt"
+      ]
+    },
+    {
+      "name": "go/github.com/jackc/pgx/v5",
+      "version": "v5.11.0",
+      "files": [
+        "LICENSES/go_github.com_jackc_pgx_v5@v5.11.0_LICENSE.txt"
+      ]
+    },
+    {
+      "name": "go/github.com/jackc/puddle/v2",
+      "version": "v2.2.2",
+      "files": [
+        "LICENSES/go_github.com_jackc_puddle_v2@v2.2.2_LICENSE.txt"
+      ]
+    },
+    {
+      "name": "go/github.com/moby/docker-image-spec",
+      "version": "v1.3.1",
+      "files": [
+        "LICENSES/go_github.com_moby_docker-image-spec@v1.3.1_LICENSE.txt"
+      ]
+    },
+    {
+      "name": "go/github.com/moby/moby/api",
+      "version": "v1.56.1",
+      "files": [
+        "LICENSES/go_github.com_moby_moby_api@v1.56.1_LICENSE.txt"
+      ]
+    },
+    {
+      "name": "go/github.com/moby/moby/client",
+      "version": "v0.6.2",
+      "files": [
+        "LICENSES/go_github.com_moby_moby_client@v0.6.2_LICENSE.txt"
+      ]
+    },
+    {
+      "name": "go/github.com/opencontainers/go-digest",
+      "version": "v1.0.0",
+      "files": [
+        "LICENSES/go_github.com_opencontainers_go-digest@v1.0.0_LICENSE.txt",
+        "LICENSES/go_github.com_opencontainers_go-digest@v1.0.0_LICENSE.docs.txt"
+      ]
+    },
+    {
+      "name": "go/github.com/opencontainers/image-spec",
+      "version": "v1.1.1",
+      "files": [
+        "LICENSES/go_github.com_opencontainers_image-spec@v1.1.1_LICENSE.txt"
+      ]
+    },
+    {
+      "name": "go/go.opentelemetry.io/auto/sdk",
+      "version": "v1.1.0",
+      "files": [
+        "LICENSES/go_go.opentelemetry.io_auto_sdk@v1.1.0_LICENSE.txt"
+      ]
+    },
+    {
+      "name": "go/go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp",
+      "version": "v0.60.0",
+      "files": [
+        "LICENSES/go_go.opentelemetry.io_contrib_instrumentation_net_http_otelhttp@v0.60.0_LICENSE.txt"
+      ]
+    },
+    {
+      "name": "go/go.opentelemetry.io/otel",
+      "version": "v1.35.0",
+      "files": [
+        "LICENSES/go_go.opentelemetry.io_otel@v1.35.0_LICENSE.txt"
+      ]
+    },
+    {
+      "name": "go/go.opentelemetry.io/otel/metric",
+      "version": "v1.35.0",
+      "files": [
+        "LICENSES/go_go.opentelemetry.io_otel_metric@v1.35.0_LICENSE.txt"
+      ]
+    },
+    {
+      "name": "go/go.opentelemetry.io/otel/trace",
+      "version": "v1.35.0",
+      "files": [
+        "LICENSES/go_go.opentelemetry.io_otel_trace@v1.35.0_LICENSE.txt"
+      ]
+    },
+    {
+      "name": "go/golang.org/x/sync",
+      "version": "v0.17.0",
+      "files": [
+        "LICENSES/go_golang.org_x_sync@v0.17.0_LICENSE.txt"
+      ]
+    },
+    {
+      "name": "go/golang.org/x/sys",
+      "version": "v0.33.0",
+      "files": [
+        "LICENSES/go_golang.org_x_sys@v0.33.0_LICENSE.txt"
+      ]
+    },
+    {
+      "name": "go/golang.org/x/text",
+      "version": "v0.29.0",
+      "files": [
+        "LICENSES/go_golang.org_x_text@v0.29.0_LICENSE.txt"
+      ]
+    },
+    {
+      "name": "Go standard library",
+      "version": "go1.25.6",
+      "files": [
+        "LICENSES/Go_standard_library@go1.25.6_LICENSE.txt"
+      ]
+    },
+    {
+      "name": "npm/lucide-react",
+      "version": "0.468.0",
+      "files": [
+        "LICENSES/npm_lucide-react@0.468.0_LICENSE.txt"
+      ]
+    },
+    {
+      "name": "npm/react",
+      "version": "19.3.1",
+      "files": [
+        "LICENSES/npm_react@19.3.1_LICENSE.txt"
+      ]
+    },
+    {
+      "name": "npm/react-dom",
+      "version": "19.3.1",
+      "files": [
+        "LICENSES/npm_react-dom@19.3.1_LICENSE.txt"
+      ]
+    },
+    {
+      "name": "npm/scheduler",
+      "version": "0.28.0",
+      "files": [
+        "LICENSES/npm_scheduler@0.28.0_LICENSE.txt"
+      ]
+    }
+  ]
+}

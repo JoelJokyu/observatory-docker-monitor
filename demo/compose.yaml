@@ -1,0 +1,41 @@
+name: observatory-log-demo
+services:
+  workload:
+    image: postgres:18
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        printf 'event=demo_started source=stdout\n'
+        printf 'event=diagnostic source=stderr severity=not_inferred\n' >&2
+        printf '<script>window.__observatoryLogExecuted=true</script>\n'
+        printf 'multiline message begins\n  continuation line\n'
+        printf 'event=load_started duration=25s cpu_limit=0.5\n'
+        timeout 25 /bin/sh -c 'while :; do :; done' || true
+        printf 'event=load_finished\n'
+        sleep 10
+        printf 'event=demo_finished\n'
+    cpus: 0.5
+    mem_limit: 64m
+    pids_limit: 32
+    logging:
+      driver: json-file
+      options:
+        max-size: 1m
+        max-file: "1"
+  tty:
+    image: postgres:18
+    entrypoint: ["/bin/sh", "-c"]
+    command: ["printf 'tty stdout\n'; printf 'tty stderr\n' >&2"]
+    tty: true
+    cpus: 0.25
+    mem_limit: 64m
+    pids_limit: 16
+  disabled:
+    image: postgres:18
+    entrypoint: ["/bin/sh", "-c"]
+    command: ["printf 'not retained by Docker\n'"]
+    logging:
+      driver: none
+    cpus: 0.25
+    mem_limit: 64m
+    pids_limit: 16

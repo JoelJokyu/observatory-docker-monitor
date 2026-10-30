@@ -1,0 +1,5 @@
+* text=auto eol=lf
+LICENSES/** whitespace=-blank-at-eof
+*.png binary
+*.jpg binary
+*.zip binary

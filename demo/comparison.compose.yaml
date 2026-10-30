@@ -1,0 +1,7 @@
+name: observatory-comparison-demo
+services:
+  api:
+    image: alpine:latest
+    command: [sh, -c, 'echo comparison-demo-ready; sleep 600']
+    mem_limit: 32m
+    cpus: 0.25

@@ -1,0 +1,41 @@
+name: observatory
+services:
+  db:
+    image: postgres:18
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: observatory
+      POSTGRES_USER: observatory
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env before starting}
+    volumes:
+      - database:/var/lib/postgresql
+    healthcheck:
+      test: [CMD-SHELL, pg_isready -U observatory -d observatory]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+  app:
+    image: ${OBSERVATORY_IMAGE:?Set OBSERVATORY_IMAGE to a numbered image or digest}
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgres://observatory:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}@db:5432/observatory?sslmode=disable
+      LISTEN_ADDR: :8080
+      DOCKER_HOST: unix:///var/run/docker.sock
+      SAMPLE_INTERVAL: ${SAMPLE_INTERVAL:-10s}
+    ports:
+      - "127.0.0.1:${OBSERVATORY_PORT:-8080}:8080"
+    volumes:
+      - type: bind
+        source: ${DOCKER_SOCKET_PATH:-/var/run/docker.sock}
+        target: /var/run/docker.sock
+        read_only: true
+        bind:
+          create_host_path: false
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    depends_on:
+      db:
+        condition: service_healthy
+volumes:
+  database:
