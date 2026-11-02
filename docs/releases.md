@@ -1,6 +1,8 @@
 # Preparing a public release
 
-Status: local preparation for 0.1.0. Repository: https://github.com/JoelJokyu/observatory-docker-monitor. Registry images and a downloadable release are not published yet. The owner selected MIT; the copyright notice uses Observatory contributors. The public repository is observatory-docker-monitor; the app is named Observatory. No credentials or personal identity are required to prepare the files.
+Repository: https://github.com/JoelJokyu/observatory-docker-monitor. Observatory 0.1.0 is the first numbered release. Published artifacts are listed on [GitHub Releases](https://github.com/JoelJokyu/observatory-docker-monitor/releases). MIT license; copyright Observatory contributors. Private vulnerability reporting is enabled.
+
+Native amd64/arm64 Checks passed for the initial source commit in [run 41083633644](https://github.com/JoelJokyu/observatory-docker-monitor/actions/runs/41083633644). The numbered release workflow rechecks its exact tagged source before publishing images. See docs/release-notes/v0.1.0.md for deployment limits and the Linux kernel advisory.
 
 ## What users receive
 
@@ -23,8 +25,8 @@ Regenerate dependency notices with `python scripts/collect_licenses.py` before p
 
 ## When the repository is ready
 
-1. Pick the public owner/repository name. Review the source, MIT copyright wording, notices and private-reporting contact. Initialize/upload the source yourself when ready; no repository has been created by this work.
-2. Run the Checks workflow. Its native amd64/arm64 jobs include frontend checks, all Go/database checks and disposable release smoke tests. Confirm both pass; workflow files have not yet executed on GitHub.
+1. Review the source, MIT wording, dependency notices and private-reporting contact in this repository.
+2. Run the Checks workflow. Its native amd64/arm64 jobs include frontend checks, all Go/database checks and disposable release smoke tests. Confirm both pass for the intended source revision.
 3. Confirm supported hosts using the matrix below. Create an immutable reviewed source tag such as v0.1.0. Do not reuse release version tags for different code.
 4. Manually run **Prepare numbered release**, entering 0.1.0 without v. The selected source tag is checked out and checked again before image publication. The job derives `ghcr.io/<owner>/<repo>`, publishes both architectures, adds version/revision/source/license metadata and BuildKit provenance/SBOM, then uploads a digest-pinned ZIP and SHA256SUMS as a workflow artifact. It does not create/publish a GitHub Release or upload arbitrary local files.
 5. GHCR packages may start private. Set this package public when ready. Verify an anonymous pull and a clean user installation from the digest-pinned bundle before announcing it. Source repository visibility and package visibility are separate settings.
@@ -38,7 +40,7 @@ Publication requires normal GitHub workflow/package permissions but no hardcoded
 | --- | --- | --- |
 | Windows Docker Desktop, Linux containers, amd64 | Existing live project; release smoke tested locally | Locally verified after checks recorded in docs/verification.md |
 | Linux arm64 container on this Windows Engine | Cross-build and emulated smoke test | Architecture check, not native OS support proof |
-| Native Linux amd64/arm64 | Native CI jobs prepared | Verify on GitHub before declaring supported |
+| Native Linux amd64/arm64 | Native GitHub CI checks passed | CI-verified image startup, collection and backup/restore |
 | macOS Intel / Apple Silicon | No local host available | Community testing needed; do not claim verified |
 | Windows containers / remote Docker / rootless / ECI | Outside the standard verified path | Document limitations; rootless socket override is best effort |
 

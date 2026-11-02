@@ -5,7 +5,7 @@ This bundle runs one local Observatory instance for one Docker Engine. You do no
 ## Before starting
 
 - Start Docker Engine with Compose v2, or Docker Desktop in **Linux containers** mode. Allow Docker enough resources for PostgreSQL and your own workloads.
-- Images target Linux amd64 (Intel/AMD) and arm64. Windows Docker Desktop amd64 is locally verified. Native Linux, macOS/Apple Silicon and ARM require their own release verification; an available image architecture alone does not prove full platform compatibility.
+- Images target Linux amd64 (Intel/AMD) and arm64. Native Linux CI checks passed on both architectures, including disposable Compose startup, collection readiness and backup/restore. Windows Docker Desktop amd64 is locally verified; ARM was also checked under emulation there. macOS/Apple Silicon host compatibility has not been verified; an available image architecture alone does not prove full host compatibility.
 - The dashboard binds to your computer's localhost. This release has no authentication and is intended for local development.
 - Observatory needs access to the Docker socket to discover containers and read measurements/logs across that Engine. A `:ro` socket mount does **not** restrict Docker API permissions; treat Observatory as trusted software with access to your Engine. Docker Desktop Enhanced Container Isolation or rootless configurations may restrict this mount.
 
@@ -90,3 +90,8 @@ Use a matching old app image when restoring a pre-upgrade backup. Wait for Postg
 - Collection unavailable: check `/api/health` and `docker compose logs --tail 100 app`; do not infer zero load from missing readings.
 
 License: see LICENSE. Dependency notices: THIRD_PARTY_NOTICES.md and LICENSES/. Release identity: release.json. This bundle is a local installation, with no hosted account or telemetry service configured by Observatory.
+
+
+## Linux kernel advisory
+
+Observatory 0.1.0 does not fix CVE-2026-98432. Go's standard Linux listener can enable MPTCP; localhost publication reduces external exposure but does not establish immunity. Keep the host/Docker/WSL kernel on the applicable vendor-patched version. Disabling MPTCP alone is an incomplete mitigation. Installation does not change host kernel settings. See the [Go Security Team advisory](https://groups.google.com/g/golang-announce/c/PCoQcdxoScw/m/aD-MgXEvAAAJ) and [Ubuntu tracker](https://ubuntu.com/security/CVE-2026-98432).

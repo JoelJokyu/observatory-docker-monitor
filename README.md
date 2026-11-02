@@ -4,7 +4,9 @@ A local-first Docker monitoring and test investigation tool for individual devel
 
 ## Installation and release status
 
-**Source is available at [JoelJokyu/observatory-docker-monitor](https://github.com/JoelJokyu/observatory-docker-monitor). Prebuilt images and downloadable releases have not been published yet.** The planned user installation is a small ZIP plus prebuilt Linux amd64/arm64 images. No compilation or separate database installation is required for that route. See [user installation instructions](packaging/INSTALL.md) and [maintainer release steps](docs/releases.md). The local test bundle in dist/ references a local test image and cannot yet be downloaded/run by other people.
+Download the numbered installation ZIP and checksum from [GitHub Releases](https://github.com/JoelJokyu/observatory-docker-monitor/releases). Follow its `INSTALL.md`, copy `.env.example` to `.env`, set a unique database password, then run `docker compose pull` and `docker compose up -d`. Open http://localhost:8080. This route requires Docker/Compose, with no Go/Node compilation or separate database installation.
+
+Images target Linux amd64 and arm64. Both passed native Linux CI; Windows Docker Desktop amd64 was checked locally. macOS host compatibility remains unverified. The source-build route is below. The local test bundle under ignored dist/ is development evidence, not the public download. See [installation details](packaging/INSTALL.md) and [maintainer release steps](docs/releases.md).
 
 For contributing/building from source, use the instructions below and [CONTRIBUTING.md](CONTRIBUTING.md). Deployment boundaries and reporting setup are in [SECURITY.md](SECURITY.md). Host compatibility is verified separately from merely building an image architecture.
 

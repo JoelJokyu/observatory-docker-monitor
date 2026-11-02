@@ -536,3 +536,10 @@ Owner explicitly deferred repository creation; later publication work is documen
 ## Public source repository — October 30, 2026
 
 Owner created https://github.com/JoelJokyu/observatory-docker-monitor and supplied it for the initial upload. Repository name is observatory-docker-monitor; the application remains Observatory. Preparing the first main-branch source commit with MIT notices, release tooling and existing tests. Working data, environment files, dumps, local distribution bundles, downloaded dependencies and screenshots are excluded. Prebuilt images/downloadable releases are still unpublished. GitHub workflow execution and private reporting will be checked separately.
+
+
+## Version 0.1.0 publication — November 2, 2026
+
+Owner authorized private vulnerability reporting and the first numbered release; topics were already configured by the owner. GitHub confirmed private reporting enabled. Initial native amd64 and arm64 Checks run 41083633644 succeeded. Prepare the exact reviewed source tag v0.1.0, run its release workflow, verify the public multi-platform image and digest-pinned bundle, then publish GitHub release assets. Public source is already on main.
+
+Owner chose to await the Linux-side fix for CVE-2026-98432 rather than change application MPTCP behavior now. Release notes, installation guide and SECURITY.md disclose this kernel issue and avoid an immunity claim. No host/kernel/network settings are changed. macOS host verification remains outside available evidence. Publication verification pending below.

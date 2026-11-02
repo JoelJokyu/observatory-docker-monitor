@@ -12,4 +12,4 @@ Go version is in go.mod; frontend builds use Node 24. For UI development, run `n
 
 Packaging uses Python 3.10+ standard library. Run `python -m unittest discover -s scripts -p 'test_*.py'`. After changing dependencies, run `python scripts/collect_licenses.py` with dependencies installed and review THIRD_PARTY_NOTICES.md/LICENSES. Do not commit .env files, dumps, work/, outputs/, dist/ or node_modules/.
 
-The CI workflow checks Go/frontend/database behavior on native Linux amd64 and arm64 runners and smoke-tests a disposable release installation. First public execution of that workflow remains to be verified once a repository exists. Maintainer publication steps are in docs/releases.md.
+The CI workflow checks Go/frontend/database behavior on native Linux amd64 and arm64 runners and smoke-tests a disposable release installation. Both native Linux jobs passed on the initial main-branch upload; each numbered release reruns them for its tagged source. Maintainer publication steps are in docs/releases.md.
