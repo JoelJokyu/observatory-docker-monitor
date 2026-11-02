@@ -1,0 +1,49 @@
+name: Verify published image
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Existing source version without v
+        required: true
+        default: "0.1.0"
+        type: string
+      digest:
+        description: Published multi-platform sha256 digest (including sha256:)
+        required: true
+        type: string
+permissions:
+  contents: read
+jobs:
+  install:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-24.04
+            platform: linux/amd64
+          - runner: ubuntu-24.04-arm
+            platform: linux/arm64
+    runs-on: ${{ matrix.runner }}
+    env:
+      VERSION: ${{ inputs.version }}
+      DIGEST: ${{ inputs.digest }}
+      PLATFORM: ${{ matrix.platform }}
+    steps:
+      - name: Validate release identity
+        run: |
+          [[ "$VERSION" =~ ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]
+          [[ "$DIGEST" =~ ^sha256:[0-9a-f]{64}$ ]]
+          echo "DOCKER_CONFIG=$RUNNER_TEMP/observatory-anonymous-docker" >> "$GITHUB_ENV"
+      - uses: actions/checkout@v7
+        with:
+          ref: v${{ inputs.version }}
+          persist-credentials: false
+      - name: Pull without registry credentials
+        run: |
+          mkdir -p "$DOCKER_CONFIG"
+          printf '{"auths":{}}\n' > "$DOCKER_CONFIG/config.json"
+          IMAGE="ghcr.io/${GITHUB_REPOSITORY,,}@$DIGEST"
+          echo "IMAGE=$IMAGE" >> "$GITHUB_ENV"
+          docker pull "$IMAGE"
+      - name: Clean installation and backup/restore
+        run: python3 scripts/smoke_release.py --image "$IMAGE" --platform "$PLATFORM"
