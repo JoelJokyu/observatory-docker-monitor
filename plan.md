@@ -543,3 +543,10 @@ Owner created https://github.com/JoelJokyu/observatory-docker-monitor and suppli
 Owner authorized private vulnerability reporting and the first numbered release; topics were already configured by the owner. GitHub confirmed private reporting enabled. Initial native amd64 and arm64 Checks run 41083633644 succeeded. Prepare the exact reviewed source tag v0.1.0, run its release workflow, verify the public multi-platform image and digest-pinned bundle, then publish GitHub release assets. Public source is already on main.
 
 Owner chose to await the Linux-side fix for CVE-2026-98432 rather than change application MPTCP behavior now. Release notes, installation guide and SECURITY.md disclose this kernel issue and avoid an immunity claim. No host/kernel/network settings are changed. macOS host verification remains outside available evidence. Publication verification pending below.
+
+
+### First numbered release — published and verified November 2, 2026
+
+Private vulnerability reporting is enabled and the reviewed v0.1.0 tag/release is public: https://github.com/JoelJokyu/observatory-docker-monitor/releases/tag/v0.1.0. The numbered workflow built both image architectures, published the image, and produced the digest-pinned installer ZIP/checksum. Full anonymous downloads, ZIP checksum and fresh native Linux amd64/arm64 installations with backup/restore all passed. Added reusable manual Verify published image workflow for future versions. Documentation and evidence are in docs/releases.md and docs/verification.md.
+
+The local Windows Docker Desktop full-image pull still returned denied; its cause is unresolved and disclosed in the public release notes. The owner confirmed package visibility was already public. No misleading universal compatibility or kernel-fix claim is made. CVE-2026-98432 remains a vendor-kernel matter as chosen by the owner, with no application/host mitigation change in this release. Private reporting and the first public version are delivered; further feature work is outside this release.

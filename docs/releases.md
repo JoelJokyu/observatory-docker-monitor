@@ -1,6 +1,6 @@
 # Preparing a public release
 
-Repository: https://github.com/JoelJokyu/observatory-docker-monitor. Observatory 0.1.0 is the first numbered release. Published artifacts are listed on [GitHub Releases](https://github.com/JoelJokyu/observatory-docker-monitor/releases). MIT license; copyright Observatory contributors. Private vulnerability reporting is enabled.
+Repository: https://github.com/JoelJokyu/observatory-docker-monitor. [Observatory 0.1.0](https://github.com/JoelJokyu/observatory-docker-monitor/releases/tag/v0.1.0) was published November 2, 2026. Published artifacts are listed on [GitHub Releases](https://github.com/JoelJokyu/observatory-docker-monitor/releases). MIT license; copyright Observatory contributors. Private vulnerability reporting is enabled.
 
 Native amd64/arm64 Checks passed for the initial source commit in [run 41083633644](https://github.com/JoelJokyu/observatory-docker-monitor/actions/runs/41083633644). The numbered release workflow rechecks its exact tagged source before publishing images. See docs/release-notes/v0.1.0.md for deployment limits and the Linux kernel advisory.
 
@@ -56,3 +56,10 @@ Monitoring is sampled, event replay is bounded and logs are not archived. Missin
 - [GitHub container publishing](https://docs.github.com/en/actions/tutorials/publish-packages/publish-docker-images)
 - [GHCR public/anonymous access](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry)
 - [MIT license text](https://opensource.org/license/mit)
+
+
+## Version 0.1.0 delivery evidence
+
+The release workflow and [fresh anonymous-image installations](https://github.com/JoelJokyu/observatory-docker-monitor/actions/runs/41460009960) passed on native Linux amd64/arm64. Public ZIP/checksum downloads were independently verified after publication. The source tag stays on its reviewed commit; the extra verification workflow and this delivery record are later main-branch maintenance commits.
+
+The maintainer’s Windows Docker Desktop still rejected the GHCR pull despite successful anonymous registry reads and native Linux installs; its cause is unresolved. This limitation is in the public release notes. See docs/verification.md for the exact image digest, checksum and evidence. Do not treat earlier local builds as proof of a successful public-image pull on Windows.
