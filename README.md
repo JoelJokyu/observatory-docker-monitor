@@ -6,7 +6,7 @@ A local-first Docker monitoring and test investigation tool for individual devel
 
 Download the numbered installation ZIP and checksum from [GitHub Releases](https://github.com/JoelJokyu/observatory-docker-monitor/releases). Follow its `INSTALL.md`, copy `.env.example` to `.env`, set a unique database password, then run `docker compose pull` and `docker compose up -d`. Open http://localhost:8080. This route requires Docker/Compose, with no Go/Node compilation or separate database installation.
 
-Images target Linux amd64 and arm64. Both passed native Linux CI; Windows Docker Desktop amd64 was checked locally. macOS host compatibility remains unverified. The source-build route is below. The local test bundle under ignored dist/ is development evidence, not the public download. See [installation details](packaging/INSTALL.md) and [maintainer release steps](docs/releases.md).
+Images target Linux amd64 and arm64. Both passed anonymous installation checks on native Linux CI. Locally built images passed Windows Docker Desktop checks, but pulling the published GHCR image failed on the maintainer's Windows installation; that unresolved limitation is documented in the [release notes](https://github.com/JoelJokyu/observatory-docker-monitor/releases/tag/v0.1.0). macOS host compatibility remains unverified. The source-build route is below. See [installation details](packaging/INSTALL.md) and [maintainer release steps](docs/releases.md).
 
 For contributing/building from source, use the instructions below and [CONTRIBUTING.md](CONTRIBUTING.md). Deployment boundaries and reporting setup are in [SECURITY.md](SECURITY.md). Host compatibility is verified separately from merely building an image architecture.
 
@@ -28,7 +28,7 @@ docker compose logs -f app
 
 Open http://localhost:8080. No manual psql or table creation is required: Compose provisions a dedicated PostgreSQL database, and the application applies the versioned migration transactionally on startup.
 
-Your chat containers can run under a different Compose project on the same Engine. Start them as usual; discovery includes all containers on that Engine, including this platform's own containers. Images alone do not produce measurements: a container must exist, and resource samples require it to be running.
+Your application containers can run under a different Compose project on the same Engine. Start them as usual; discovery includes all containers on that Engine, including this platform's own containers. Images alone do not produce measurements: a container must exist, and resource samples require it to be running.
 
 The first CPU reading is unknown; allow two successful collection cycles. Stopped/removed containers retain history. A recreated container gets a new identity even if its name is unchanged.
 
@@ -38,9 +38,9 @@ Stop the platform without removing its data:
 docker compose down
 ```
 
-The database uses its own named volume. Avoid `down -v` unless intentionally deleting this project's stored history. The default database password is for local development only; change it before the first initialization if needed. Updating it after initialization also requires updating the database role, not just an environment variable.
+The database uses its own named volume. Keep the Compose project name unchanged when reusing an existing volume. Avoid `down -v` unless intentionally deleting this project's stored history. The default database password is for local development only; change it before the first initialization if needed. Updating it after initialization also requires updating the database role, not just an environment variable.
 
-## What this slice does
+## Features
 
 - Discovers running and stopped containers through the Docker Go SDK.
 - Samples running containers every 10 seconds, with up to four concurrent Docker requests and per-request timeouts.
@@ -51,6 +51,10 @@ The database uses its own named volume. Avoid `down -v` unless intentionally del
 - Serves container status and historical bucket means through net/http.
 - Presents a React/TypeScript dashboard with dark/light themes, search and state filters, a resizable container detail panel, and resource/I/O charts with fifteen-minute through seven-day windows. Unknown and stale values remain explicit.
 - Deletes samples older than seven days in bounded batches every minute. Retention is eventual; a large backlog can take multiple passes. Empty removed-container identities expire after seven days; existing stopped containers remain discoverable.
+- Groups containers by Compose project and records lifecycle/health events.
+- Reads bounded Docker log snapshots with message search, stream filtering and copying.
+- Records named test sessions and compares completed sessions using per-container observations and lifecycle counts.
+- Provides project-specific opt-in alerts for sustained CPU/memory thresholds, nonzero exits, OOM and unhealthy events, with dismissal and investigation links.
 - Logs collection/storage errors and exposes platform readiness through `/api/health`.
 
 CPU is null after startup, a counter reset, a failed collection cycle, or an unusable previous sample. Failed delivery is not replaced by zeros. Samples are written directly to PostgreSQL; there is no durable delivery buffer or automatic backfill. Database failures can lose observations, and subsequent CPU collection starts from a new baseline.
@@ -92,26 +96,31 @@ $env:TEST_DATABASE_URL = 'postgres://observatory:local-development-only@localhos
 go test -v ./internal/store
 ```
 
-Without TEST_DATABASE_URL, that integration test explicitly skips. Unit tests cover CPU/memory normalization, resets, collection failure/recovery, freshness, and history validation. Test success alone does not establish real Docker compatibility or performance capacity.
+Without TEST_DATABASE_URL, the PostgreSQL integration tests explicitly skip. Unit tests cover CPU/memory normalization, resets, collection failure/recovery, freshness, and history validation. Test success alone does not establish real Docker compatibility or performance capacity.
 
 ## API
 
 - `GET /api/health`: database connectivity and collector state; returns 503 when degraded or stale.
 - `GET /api/containers`: inventory, latest samples, collection interval, and collector state.
 - `GET /api/containers/{id}/history?from=RFC3339&to=RFC3339`: recent history; defaults to the last hour. Maximum window is seven days. Responses aggregate to roughly 600 buckets and identify the bucket width, count, and first/last observation times.
+- `GET /api/containers/{id}/logs`: bounded on-demand Docker output; see [log API](docs/logs-api.md).
+- `GET /api/events`: recorded lifecycle/health events with project, container and time filters; see [event API](docs/events.md).
+- `GET/POST /api/sessions`, `GET /api/sessions/{id}` and `POST /api/sessions/{id}/finish`: list, start, inspect and finish test sessions; see [session API](docs/sessions.md).
+- `GET /api/alerts`, `POST /api/alerts/{id}/dismiss` and `GET/PUT /api/alert-rules`: alert history, acknowledgment and per-project settings; see [alert API](docs/alerts.md).
 
-CPU, memory, PIDs, and I/O-rate chart values are bucket means; they can hide short peaks and small gaps inside a bucket. The API exposes coverage metadata but the first dashboard is not a complete gap-analysis tool. Unknown IDs return empty history. There is no pagination or arbitrary query language in this slice.
+CPU, memory, PIDs, and I/O-rate chart values are bucket means; they can hide short peaks and small gaps inside a bucket. The API exposes observation counts and time bounds, which do not establish continuous coverage. Unknown IDs return empty resource history. Event, session and alert lists have documented result limits; there is no arbitrary query language.
 
-## Development boundary
+## Deployment scope
 
-The dashboard and database are published only on localhost. Authentication, TLS, remote Engines, log ingestion/archiving, traces, alerts, and performance benchmarks are not implemented.
+Both supplied Compose setups bind the dashboard to localhost. The source-build setup also publishes PostgreSQL on localhost; the release bundle keeps PostgreSQL internal. Authentication, application TLS termination, remote Engine deployments, archived logs, traces and performance benchmarks are outside the current release. Local project alerts and on-demand Docker log snapshots are implemented.
 
-The application currently runs as root inside its local development container to reach the Docker socket. A read-only socket mount does **not** restrict Docker API permissions: access to the socket can grant broad control of the Engine. The collector only invokes listing and stats operations, but that is not an enforced authorization boundary. Do not expose this development setup publicly. Revisit socket isolation and process privileges before a release.
+The application runs as root in its container to reach the Docker socket. A read-only socket mount does **not** restrict Docker API permissions: socket access can grant broad control of the Engine. Observatory uses Docker read APIs for discovery, resource statistics, events and log snapshots; this application behavior is not an enforced authorization boundary. The release Compose file adds a read-only app filesystem, dropped capabilities and no-new-privileges. Keep the installation local and review [SECURITY.md](SECURITY.md) for deployment limits, the Linux kernel advisory and private vulnerability reporting.
 
 ## Design and evidence
 
 See `docs/architecture.md` for responsibilities, data flow, decisions, and verification status. The root `plan.md` tracks the wider project plan. No throughput, latency, or supported-capacity results have been claimed.
-## Updating to the first presentable milestone
+
+## Rebuilding from source
 
 From this project directory:
 
@@ -119,9 +128,9 @@ From this project directory:
 docker compose up --build -d app
 ```
 
-The build uses Node 24 to compile React/TypeScript, copies the generated assets into the Go binary, and deploys the same monolith. The first rebuild downloads the Node build image and frontend dependencies. There is no extra frontend service in the running deployment.
+The build uses Node 24 to compile React/TypeScript, copies the generated assets into the Go binary, and deploys the same monolith. An uncached build downloads the build images and frontend dependencies. There is no extra frontend service in the running deployment.
 
-Migration 002 adds nullable I/O/PID columns automatically; existing history and the database volume are preserved. Old measurements cannot be backfilled and display unknown for the newly introduced fields. Allow two successful collection cycles for the first I/O rates. If an Engine does not expose a counter, it remains unknown rather than becoming zero.
+Versioned database migrations run automatically on startup. Back up before upgrading; follow the [release installation and upgrade guide](packaging/INSTALL.md) for prebuilt installations. Measurements missing from older history are not backfilled. Allow two successful collection cycles for the first I/O rates. If an Engine does not expose a counter, it remains unknown rather than becoming zero.
 
 The table shows cumulative NET I/O (receive/send) and BLOCK I/O (read/write), in binary byte units. These counters belong to the current container run. The Network & disk tab charts rates in bytes per second. PIDs include processes and threads, matching the Linux cgroup counter. Block I/O is not filesystem capacity.
 
@@ -129,7 +138,7 @@ Click a container to inspect it in the side panel. Close with Escape; resize usi
 
 ## Frontend development
 
-Node 24 LTS is recommended. The machine's existing Node 20.18 is too old for this Vite version; Docker builds provide Node 24 independently, so Docker-only users do not need to update their host Node installation.
+Use Node 24 for frontend development. Docker builds provide their own Node toolchain; running a prebuilt release does not require Node on the host.
 
 ```powershell
 cd frontend
@@ -145,23 +154,22 @@ npm test
 ```
 
 React sources are in `frontend/src`, including the main application/detail panel, chart component, API types, formatting/freshness helpers, and theme tokens. Charts use SVG paths and preserve gaps between missing observations. Tests check missing versus zero, stale-data handling, and chart gap segmentation.
-## Milestone 2 — Docker log snapshots
 
-The container detail panel now has a Logs tab. It reads a bounded snapshot directly from Docker for the selected resource-investigation window. The snapshot displays exact time bounds and fetch time, and only updates when opened, when the selected duration changes, or when Refresh logs is clicked. Resource auto-refresh does not follow logs.
+## Docker log snapshots
 
-There is no log database, schema migration, backfill, or independent retention. Running and stopped containers work when Docker can still serve their output. Removed containers keep resource history but no Observatory log archive. Docker logging-driver configuration and rotation govern what is available.
+The container detail panel has a Logs tab. It reads a bounded snapshot directly from Docker for the selected resource-investigation window. The snapshot displays exact time bounds and fetch time, and only updates when opened, when the selected duration changes, or when Refresh logs is clicked. Resource auto-refresh does not follow logs.
+
+Log snapshots have no independent database or retention. Running and stopped containers work when Docker can still serve their output. Removed containers keep resource history but no Observatory log archive. Docker logging-driver configuration and rotation govern what is available.
 
 The default is up to 500 Docker tail lines, with bounded text/wire size and a deadline. TTY output is explicitly combined; otherwise stdout/stderr are labeled without inferring severity. Multiline and script-like content render as text. Oversized output is marked partial/truncated, and missing coverage is never presented as complete history.
 
 See `docs/logs-api.md`, `docs/decisions/0002-docker-log-snapshots.md`, and `demo/README.md` for the contract, accepted design, and repeatable test workload. The current plan is `plan.md` in this project root.
 
-Keep the Compose project name unchanged when reusing an existing local database volume.
-
 ## Projects and lifecycle events
 
 Use the **Project** selector to focus the inventory and summary on a Compose application, or select Standalone containers. Open the clock icon in the left navigation for its recorded event timeline, or the **Events** tab in a container's side panel. Starts, exits, removals, health changes and OOM events appear with timestamps and available exit/signal evidence. Events are retained for seven days; Docker's limited replay can leave collection gaps. An empty timeline is not a complete audit result.
 
-`GET /api/events` supports bounded project/container/time queries. See [event behavior and API](docs/events.md) for the contract and an isolated demo. Named sessions, investigation tools, local alerts and session comparison are implemented; see [plan.md](plan.md) for the milestone record.
+`GET /api/events` supports bounded project/container/time queries. See [event behavior and API](docs/events.md) for the contract and an isolated demo. The following sections describe sessions, investigation tools, local alerts and comparison; see [plan.md](plan.md) for the development record.
 
 ## Named test sessions
 
@@ -176,7 +184,6 @@ Use **View resources** or **View logs** on an event or session member. The side 
 ## Local project alerts
 
 Open the bell and choose a project, then **Configure alerts** to opt in. CPU/memory thresholds require 30 seconds of consecutive recorded evidence. Nonzero exits, OOM and unhealthy Docker events can also create alerts. Dismiss acknowledges an occurrence; it does not claim recovery. The bell counts undismissed alerts across projects, and entries link to resources/logs for investigation. No notifications leave the app. See [rules, API and limitations](docs/alerts.md).
-
 
 ## Compare completed sessions
 
